@@ -36,6 +36,12 @@ func (t *Todo) Update() error {
 	return err
 }
 
+func Find(id string) (Todo, error) {
+	var todo Todo
+	err := db.QueryRow("SELECT id, task, done FROM todos WHERE id = ?", id).Scan(&todo.Id, &todo.Task, &todo.Done)
+	return todo, err
+}
+
 func AllTodos() ([]Todo, error) {
 	rows, err := db.Query("SELECT id, task, done FROM todos")
 	if err != nil {

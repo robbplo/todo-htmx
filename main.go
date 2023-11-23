@@ -26,8 +26,7 @@ func todosHandler(ctx *fiber.Ctx) error {
 	}
 
 	component := components.TodoList(todos)
-	component.Render(ctx.Context(), ctx)
-	return nil
+	return component.Render(ctx.Context(), ctx)
 }
 
 func createHandler(ctx *fiber.Ctx) error {
@@ -40,11 +39,29 @@ func createHandler(ctx *fiber.Ctx) error {
 	return ctx.Redirect("/todos")
 }
 
+func updateHandler(ctx *fiber.Ctx) error {
+	todo, err := db.Find(ctx.Params("id"))
+	if err != nil {
+		return err
+	}
+
+	todo.Done = ctx.FormValue("done") == "on"
+
+	err = todo.Update()
+	if err != nil {
+		return err
+	}
+
+	component := components.Todo(todo)
+	return component.Render(ctx.Context(), ctx)
+}
+
 func main() {
 	app := fiber.New()
 	app.Get("/", indexHandler)
 	app.Get("/todos", todosHandler)
 	app.Post("/todos", createHandler)
+	app.Put("/todos/:id", updateHandler)
 
 	println("Listening on http://localhost:8080")
 	log.Fatal(app.Listen(":8080"))
