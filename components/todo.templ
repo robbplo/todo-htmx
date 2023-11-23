@@ -1,0 +1,36 @@
+package components
+
+import (
+	"github.com/robbplo/todo-htmx/db"
+	"fmt"
+)
+
+templ Homepage(todos []db.Todo) {
+	<html>
+		<head>
+			<script src="https://unpkg.com/htmx.org@1.9.8"></script>
+		</head>
+		<body>
+			<h1>Time to get some shit done</h1>
+			@TodoList(todos)
+		</body>
+	</html>
+}
+
+templ TodoList(todos []db.Todo) {
+	<form hx-post="/todos">
+		<input name="task" type="text" placeholder="some shit u have to do"/>
+		<div id="todo-list">
+			for _, todo := range todos {
+				@Todo(todo)
+			}
+		</div>
+	</form>
+}
+
+templ Todo(todo db.Todo) {
+	<label id={ fmt.Sprintf("todo-%v", todo.Id) }>
+		<input type="checkbox" hx-put="/todos/toggle"/>
+		<b>{ todo.Task }</b>
+	</label>
+}
