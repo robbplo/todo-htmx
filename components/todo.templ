@@ -24,6 +24,7 @@ templ TodoList(todos []db.Todo) {
 	<div id="todo-list">
 		<form hx-post="/todos" hx-target="#todo-list">
 			<input
+ 				id="newTask"
  				name="task"
  				type="text"
  				placeholder="some shit u have to do"
@@ -35,13 +36,20 @@ templ TodoList(todos []db.Todo) {
 				@Todo(todo)
 			}
 		</div>
+		<div class="">
+			<a
+ 				hx-delete="/todos/done"
+ 				hx-target="#todo-list"
+ 				class="px-4 py-2 rounded-lg bg-slate-200 border-1 border-black cursor-pointer"
+			>Clear all finished tasks</a>
+		</div>
 	</div>
 }
 
 templ Todo(todo db.Todo) {
 	<label
  		id={ fmt.Sprintf("todo-%v", todo.Id) }
- 		class="cursor-pointer"
+ 		class="cursor-pointer px-2 py-1 mb-2"
 	>
 		<input
  			name="done"

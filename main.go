@@ -15,8 +15,7 @@ func indexHandler(ctx *fiber.Ctx) error {
 
 	ctx.Set("Content-Type", "text/html")
 	component := components.Homepage(todos)
-	component.Render(ctx.Context(), ctx)
-	return nil
+	return component.Render(ctx.Context(), ctx)
 }
 
 func todosHandler(ctx *fiber.Ctx) error {
@@ -56,13 +55,27 @@ func updateHandler(ctx *fiber.Ctx) error {
 	return component.Render(ctx.Context(), ctx)
 }
 
+func deleteDoneHandler(ctx *fiber.Ctx) error {
+	err := db.DeleteDone()
+	if err != nil {
+		return err
+	}
+
+	todos, err := db.AllTodos()
+	if err != nil {
+		return err
+	}
+	component := components.TodoList(todos)
+	return component.Render(ctx.Context(), ctx)
+}
+
 func main() {
 	app := fiber.New()
-	app.Get("/", indexHandler)
-	app.Get("/todos", todosHandler)
-	app.Post("/todos", createHandler)
-	app.Put("/todos/:id", updateHandler)
+	app.Get("/", indexHandler).Name("index")
+	app.Get("/todos", todosHandler).Name("todos")
+	app.Post("/todos", createHandler).Name("create")
+	app.Put("/todos/:id", updateHandler).Name("update")
+	app.Delete("/todos/done", deleteDoneHandler).Name("deleteDone")
 
-	println("Listening on http://localhost:8080")
 	log.Fatal(app.Listen(":8080"))
 }

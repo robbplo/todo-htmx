@@ -16,7 +16,7 @@ var db = initDB()
 
 func initDB() *sql.DB {
 	// Create a new sqlite database in directory `db`
-	db, err := sql.Open("sqlite3", "./db/todos.db")
+	db, err := sql.Open("sqlite3", "./db/storage.db")
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -56,4 +56,9 @@ func AllTodos() ([]Todo, error) {
 	}
 
 	return todos, nil
+}
+
+func DeleteDone() error {
+	_, err := db.Exec("DELETE FROM todos WHERE done = ?", true)
+	return err
 }
