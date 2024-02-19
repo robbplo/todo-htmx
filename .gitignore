@@ -24,5 +24,3 @@ tmp/
 # sqlite storage
 db/storage.db
 
-# compiled templates
-**/*_templ.go

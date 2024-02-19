@@ -4,8 +4,14 @@ import (
 	"github.com/gofiber/fiber/v2"
 	"github.com/robbplo/todo-htmx/components"
 	"github.com/robbplo/todo-htmx/db"
+
 	"log"
 )
+
+// go:embed db/schema.sql
+var ddl string
+
+db, err := sql.Open("sqlite3", "file::memory:?cache=shared")
 
 func indexHandler(ctx *fiber.Ctx) error {
 	todos, err := db.AllTodos()

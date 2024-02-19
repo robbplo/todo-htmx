@@ -1,0 +1,6 @@
+CREATE TABLE IF NOT EXISTS
+  todos (
+  id INTEGER PRIMARY KEY,
+  task VARCHAR(255),
+  done BOOLEAN
+)
